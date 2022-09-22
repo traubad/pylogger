@@ -1,3 +1,4 @@
+from cgitb import text
 from colors import colors
 from datetime import datetime
 from enum import Enum
@@ -6,6 +7,7 @@ import pytz
 class Log():
     def __init__(self, identifier:str):
         self.identifier = identifier
+        # TODO: Move settings to a seperate file so that all of this stuff can be customized
         self.modes = Enum('Mode', 'INFO VERBOSE WARN ERROR FATAL')
         self.settings = {
             self.modes.INFO: {
@@ -58,25 +60,46 @@ class Log():
         identifier = colors.color_text(text=self.identifier, fg_color=identifier_text_color, bg_color=identifier_bg_color)
         return self.settings.get('output_prefix_format','{timestamp}|{identifier}').format(identifier=identifier,timestamp=timestamp)
 
-    def info(self, text):
-        self.log(text=text, mode=self.modes.INFO)
+    # def setup(self):
+    #     new_funcs = {}
+    #     for mode in self.modes:
+    #         name = str(mode).split('.')[-1].lower()
+    #         new_funcs[name] = lambda self,text: self.log(text=text, mode=mode)
+    #         setattr(self.__class__, name, new_funcs[name])
+    #     print(new_funcs)
+    #     new_funcs['info'](self,'test')
 
-    def warn(self, text):
-        self.log(text=text, mode=self.modes.WARN)
+    def func_factory(self, mode):
+        def f(self, text):
+            self.log(text=text, mode=mode)
+        return f
 
-    def verbose(self, text):
-        self.log(text=text, mode=self.modes.VERBOSE)
+    def setup(self):
+        for mode in self.modes:
+            name = str(mode).split('.')[-1].lower()
+            new_func = self.func_factory(mode)
+            setattr(self.__class__, name, new_func)
 
-    def error(self, text):
-        self.log(text=text, mode=self.modes.ERROR)
 
-    def fatal(self, text):
-        self.log(text=text, mode=self.modes.FATAL)
+    # def info(self, text):
+    #     self.log(text=text, mode=self.modes.INFO)
+
+    # def warn(self, text):
+    #     self.log(text=text, mode=self.modes.WARN)
+
+    # def verbose(self, text):
+    #     self.log(text=text, mode=self.modes.VERBOSE)
+
+    # def error(self, text):
+    #     self.log(text=text, mode=self.modes.ERROR)
+
+    # def fatal(self, text):
+    #     self.log(text=text, mode=self.modes.FATAL)
 
 logger = Log('KINC')
+logger.setup()
 logger.info('info!')
-x=5
-logger.warn(f"warning: formatted Strings x={x}")
+logger.warn(f"warning!")
 logger.verbose("Verbose text")
 logger.error('Error')
-logger.fatal("RUN FOR YOUR LIVES!")
+logger.fatal("FATAL")
