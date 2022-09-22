@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+        "**/__pycache__": true
+    },
+    "python.defaultInterpreterPath": "/Users/adamtraub/.local/share/virtualenvs/pylogger-zIJYeblX/bin/python"
+}
