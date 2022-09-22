@@ -30,7 +30,7 @@ config = {
     "identifier_text_color": colors.fg.blue,
     "output_prefix_format": "[{timestamp}][{identifier}]",
     "output_format": "{prefix} {text}",
-    "timezeone": pytz.timezone("US/Eastern"),
+    "timezone": pytz.timezone("US/Eastern"),
     "time_format": "%H:%M",
     "time_text_color": colors.fg.red,
     "text_color": colors.fg.darkgrey,
