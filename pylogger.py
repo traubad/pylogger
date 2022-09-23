@@ -3,19 +3,19 @@ from colors import colors
 from datetime import datetime
 from enum import Enum
 import pytz
-import settings
+import pylogger_settings
 
 
 class Log:
     def __init__(self, identifier: str):
         self.identifier = identifier
-        self.modes = settings.modes
-        self.settings = settings.config
+        self.modes = pylogger_settings.modes
+        self.settings = pylogger_settings.config
         self._setup()
 
     def _log(self, text, mode):
         """This should only be called directly with custom modes - coming soon"""
-        if self.settings.get(mode, {}).get("active", False):
+        if self.settings.get(mode, {}).get("active", True):
             text = colors.color_text(
                 text,
                 fg_color=self.settings.get(mode).get(
@@ -63,7 +63,7 @@ class Log:
             "output_prefix_format", "{timestamp}|{identifier}"
         ).format(identifier=identifier, timestamp=timestamp)
 
-    def _func_factory(self, mode):
+    def __logger_factory(self, mode):
         def f(self, text):
             self._log(text=text, mode=mode)
 
@@ -72,7 +72,7 @@ class Log:
     def _setup(self):
         for mode in self.modes:
             name = str(mode).split(".")[-1].lower()
-            new_func = self._func_factory(mode)
+            new_func = self.__logger_factory(mode)
             if not self.settings.get(mode, False):
                 self.settings[mode] = {"active": True}
             setattr(self.__class__, name, new_func)
