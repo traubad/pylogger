@@ -15,7 +15,7 @@ class Log:
 
     def _log(self, text, mode):
         """This should only be called directly with custom modes - coming soon"""
-        if self.settings.get(mode).get("active", False):
+        if self.settings.get(mode, {}).get("active", False):
             text = colors.color_text(
                 text,
                 fg_color=self.settings.get(mode).get(
@@ -73,6 +73,10 @@ class Log:
         for mode in self.modes:
             name = str(mode).split(".")[-1].lower()
             new_func = self._func_factory(mode)
+            if not self.settings.get(mode, False):
+                self.settings[mode] = {
+                    'active': True
+                }
             setattr(self.__class__, name, new_func)
 
 
