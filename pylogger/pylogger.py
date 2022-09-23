@@ -1,15 +1,15 @@
-from modules.colors import colors
+from _colors import colors
 from datetime import datetime
 from enum import Enum
 import pytz
-import modules.pylogger_settings as pylogger_settings
+import _pylogger_settings
 
 
 class Log:
     def __init__(self, identifier: str):
         self.identifier = identifier
-        self.modes = pylogger_settings.modes
-        self.settings = pylogger_settings.config
+        self.modes = _pylogger_settings.modes
+        self.settings = _pylogger_settings.config
         self._setup()
 
     def _log(self, text, mode):
