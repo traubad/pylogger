@@ -74,9 +74,7 @@ class Log:
             name = str(mode).split(".")[-1].lower()
             new_func = self._func_factory(mode)
             if not self.settings.get(mode, False):
-                self.settings[mode] = {
-                    'active': True
-                }
+                self.settings[mode] = {"active": True}
             setattr(self.__class__, name, new_func)
 
 
